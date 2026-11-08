@@ -32,8 +32,8 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // The résumé PDFs live outside /public and are read by the API route,
-  // so make sure they are bundled with it on deployment.
+  // Local fallback for the résumé PDFs (private/cv is gitignored). In production
+  // they come from RESUME_PDF_URL_EN / RESUME_PDF_URL_DE instead.
   outputFileTracingIncludes: {
     "/api/resume/[lang]": ["./private/cv/**"],
   },

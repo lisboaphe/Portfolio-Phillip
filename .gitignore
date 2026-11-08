@@ -8,3 +8,6 @@ out
 # Automatisch erzeugter TypeScript-Zwischenspeicher
 *.tsbuildinfo
 !.env.example
+
+# Résumé PDFs: private, never committed (served via RESUME_PDF_URL_* in production)
+private/
