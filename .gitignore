@@ -9,5 +9,5 @@ out
 *.tsbuildinfo
 !.env.example
 
-# Résumé PDFs: private, never committed (served via RESUME_PDF_URL_* in production)
+# Résumé PDFs: private, never committed (served from a private Vercel Blob store in production)
 private/

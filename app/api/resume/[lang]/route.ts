@@ -1,24 +1,27 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
+import { get } from "@vercel/blob";
 import { hasResumeAccess } from "@/lib/server/resume-access";
 
 export const dynamic = "force-dynamic";
 
 // The PDFs are never committed to the (public) repo.
-// In production they come from private storage: set RESUME_PDF_URL_EN / RESUME_PDF_URL_DE
-// to their storage URLs (e.g. Vercel Blob). The URLs stay on the server, never in the page.
+// In production they live in a *private* Vercel Blob store connected to this project,
+// uploaded under exactly these file names. Vercel adds the store's credentials
+// (BLOB_STORE_ID / OIDC, or BLOB_READ_WRITE_TOKEN) to the environment automatically.
 // Locally, the files can sit in private/cv/ instead (that folder is gitignored).
-const files: Record<string, { name: string; urlEnv: string }> = {
-  en: { name: "phillip-lisboa-cv-en.pdf", urlEnv: "RESUME_PDF_URL_EN" },
-  de: { name: "phillip-lisboa-cv-de.pdf", urlEnv: "RESUME_PDF_URL_DE" },
+const files: Record<string, string> = {
+  en: "phillip-lisboa-cv-en.pdf",
+  de: "phillip-lisboa-cv-de.pdf",
 };
 
-async function loadPdf({ name, urlEnv }: { name: string; urlEnv: string }) {
-  const url = process.env[urlEnv];
-  if (url) {
-    const res = await fetch(url, { cache: "no-store" }).catch(() => null);
-    return res?.ok ? new Uint8Array(await res.arrayBuffer()) : null;
+const blobConfigured = () => Boolean(process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN);
+
+async function loadPdf(name: string): Promise<BodyInit | null> {
+  if (blobConfigured()) {
+    const result = await get(name, { access: "private" }).catch(() => null);
+    return result?.statusCode === 200 ? result.stream : null;
   }
   return readFile(path.join(process.cwd(), "private", "cv", name))
     .then((buffer) => new Uint8Array(buffer))
@@ -28,18 +31,19 @@ async function loadPdf({ name, urlEnv }: { name: string; urlEnv: string }) {
 /** Serves the résumé PDF only to visitors who unlocked it with the password. */
 export async function GET(_request: Request, { params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const file = files[lang];
-  if (!file) return new NextResponse("Not found", { status: 404 });
+  const name = files[lang];
+  if (!name) return new NextResponse("Not found", { status: 404 });
   if (!(await hasResumeAccess())) return new NextResponse("Password required", { status: 401 });
 
-  const pdf = await loadPdf(file);
+  const pdf = await loadPdf(name);
   if (!pdf) return new NextResponse("The résumé isn’t available right now.", { status: 503, headers: { "Cache-Control": "no-store" } });
 
   return new NextResponse(pdf, {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="${file.name}"`,
+      "Content-Disposition": `inline; filename="${name}"`,
       "Cache-Control": "private, no-store",
+      "X-Content-Type-Options": "nosniff",
       "X-Robots-Tag": "noindex",
     },
   });

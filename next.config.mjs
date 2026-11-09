@@ -33,7 +33,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   // Local fallback for the résumé PDFs (private/cv is gitignored). In production
-  // they come from RESUME_PDF_URL_EN / RESUME_PDF_URL_DE instead.
+  // they come from a private Vercel Blob store instead.
   outputFileTracingIncludes: {
     "/api/resume/[lang]": ["./private/cv/**"],
   },
