@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { site } from "@/data/portfolio-content";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ProjectsSection } from "@/components/sections/ProjectsSection";
+import { ProjectCarousel } from "@/components/sections/ProjectCarousel";
 import { TechStackSection } from "@/components/sections/TechStackSection";
 import { PixelIcon } from "@/components/ui/PixelIcon";
 import { NextStepsSection } from "@/components/sections/NextStepsSection";
@@ -35,7 +36,7 @@ const socialItems = [
   {label: "LinkedIn", icon: "Icon_LinkedIn-small.webp", href: site.socials.linkedin === "#" ? "" : site.socials.linkedin},
 ];
 function SocialItem({item, compact = false}: {item: typeof socialItems[number]; compact?: boolean}) {
-  const children = <><img src={`/pixel/${item.icon}`} alt=""/>{!compact && <span>{item.label}{!item.href && <small>Coming soon</small>}</span>}</>;
+  const children = <><img src={`/pixel/${item.icon}`} width={96} height={96} alt=""/>{!compact && <span>{item.label}{!item.href && <small>Coming soon</small>}</span>}</>;
   return item.href ? <a className="contact-link" href={item.href} aria-label={item.label} title={item.label} target="_blank" rel="noopener noreferrer">{children}</a> : <span className="contact-link unavailable" aria-label={`${item.label} — coming soon`} title={`${item.label} — coming soon`}>{children}</span>;
 }
 
@@ -146,16 +147,17 @@ export function PortfolioLayout() {
     <div ref={stage} className="stage">
     <div className="sitting-line" aria-hidden="true"/>
     {drops.map(d => <span key={d.id} className={`pre-ripple step-${d.step}`} style={{left: d.x, top: d.y}} aria-hidden="true" onAnimationEnd={() => setDrops(list => list.filter(x => x.id !== d.id))}/>)}
-    <header className="identity" aria-hidden={!revealed || !!page}><div className="identity-content"><h1>Phillip Lisboa</h1><p>Wirtschaftsinformatik Student · Developer · Cybersecurity Enthusiast</p></div></header>
-    <nav className={`rim-socials ${page ? "character-hidden" : ""}`} aria-label="Social links" inert={!revealed || !!page || busy}>{socialItems.map(item=><SocialItem key={item.label} item={item} compact/>)}<button type="button" className="contact-link" aria-label="Send me a message" title="Send me a message" onClick={e=>openMessage(e.currentTarget)}><img src="/pixel/Icon_Email.svg" alt=""/></button></nav>
+    <header className="identity" aria-hidden={!revealed || !!page}><div className="identity-content"><h1>Phillip Lisboa</h1><p>Business Informatics student building web apps and Linux tools, with a growing focus on cybersecurity.</p><p className="identity-status">Open to working-student opportunities</p></div></header>
+    <nav className={`rim-socials ${page ? "character-hidden" : ""}`} aria-label="Social links" inert={!revealed || !!page || busy}>{socialItems.map(item=><SocialItem key={item.label} item={item} compact/>)}<button type="button" className="contact-link" aria-label="Send me a message" title="Send me a message" onClick={e=>openMessage(e.currentTarget)}><img src="/pixel/Icon_Email.svg" width={24} height={24} alt=""/></button></nav>
     <div ref={hero} onAnimationEnd={event => { if (event.target === event.currentTarget && event.animationName === "water-reveal") { event.currentTarget.style.setProperty("animation", "none", "important"); event.currentTarget.style.setProperty("clip-path", "none", "important"); event.currentTarget.style.setProperty("filter", "none", "important"); } }} className={`hero-surface ${revealed ? "is-revealed" : ""}`} inert={!revealed || !!page || busy}>
       <div className="bento-layout">
+        <ProjectCarousel onOpen={button=>{history.pushState(null,"","#projects");void transition("projects",button);}}/>
         <section className="focus-areas" aria-label="What I do">{focusAreas.map(area => <article className="focus-card" key={area.title}><PixelIcon name={`Icon_${area.icon}`}/><h2>{area.title}</h2><p>{area.text}</p></article>)}</section>
-        <div ref={photo} className="photo-tile"><img src="/chibi/phillip.webp" alt="Pixel-art Phillip wearing a black hoodie" className="portrait-image"/><div className="photo-caption"><span>PHILLIP</span><span>One pixel at a time.</span></div></div>
-        <nav className="portal-nav" aria-label="Explore my portfolio">{tabs.map((tab)=><button key={tab.id} disabled={busy} onClick={e=>{history.pushState(null,"",`#${tab.id}`);void transition(tab.id,e.currentTarget);}} className={`portal-button tile-${tab.id}`}>{tab.icon ? <PixelIcon name={tab.icon}/> : <span className="portal-glyph">{tab.glyph}</span>}<span className="portal-text"><strong>{tab.label}</strong><small>{tab.detail}</small></span></button>)}
+        <div ref={photo} className="photo-tile"><img src="/photos/phillip-tall.webp" width={600} height={1800} alt="Phillip Lisboa smiling at a café table" className="portrait-image is-photo"/><div className="photo-caption"><span>PHILLIP</span><span>One pixel at a time.</span></div></div>
+        <nav className="portal-nav" aria-label="Explore my portfolio">{tabs.filter(tab=>tab.id!=="projects").map((tab)=><button key={tab.id} disabled={busy} onClick={e=>{history.pushState(null,"",`#${tab.id}`);void transition(tab.id,e.currentTarget);}} className={`portal-button tile-${tab.id}`}>{tab.icon ? <PixelIcon name={tab.icon}/> : <span className="portal-glyph">{tab.glyph}</span>}<span className="portal-text"><strong>{tab.label}</strong><small>{tab.detail}</small></span></button>)}
         <div className={`portal-button tile-contact contact-card ${contactOpen ? "contact-open" : ""}`} onKeyDown={e=>{if(e.key==="Escape") {setContactOpen(false);e.currentTarget.querySelector("button")?.focus();}}}>
           <button className="contact-toggle" aria-expanded={contactOpen} aria-controls="contact-options" onClick={()=>setContactOpen(v=>!v)}><span className="contact-heading"><PixelIcon name="Icon_Contact"/><span className="portal-text"><strong>Contact</strong><small>Let’s connect</small></span></span></button>
-          <div id="contact-options" className="contact-options" inert={!contactOpen} aria-hidden={!contactOpen}><div>{socialItems.map(item=><SocialItem key={item.label} item={item}/>)}<button type="button" className="contact-link" onClick={e=>openMessage(e.currentTarget)}><img src="/pixel/Icon_Email.svg" alt=""/><span>Email<small>Send me a message</small></span></button></div></div>
+          <div id="contact-options" className="contact-options" inert={!contactOpen} aria-hidden={!contactOpen}><div>{socialItems.map(item=><SocialItem key={item.label} item={item}/>)}<button type="button" className="contact-link" onClick={e=>openMessage(e.currentTarget)}><img src="/pixel/Icon_Email.svg" width={24} height={24} alt=""/><span>Email<small>Send me a message</small></span></button></div></div>
         </div></nav>
       </div>
     </div>

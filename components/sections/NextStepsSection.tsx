@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 type Status = "done" | "progress" | "ongoing" | "planned";
-type RoadmapItem = { text: string; status: Status; percent?: number };
+type RoadmapItem = { text: string; status: Status };
 
 const steps: { label: string; title: string; text: string; roadmap: RoadmapItem[] }[] = [
   {
@@ -22,9 +22,9 @@ const steps: { label: string; title: string; text: string; roadmap: RoadmapItem[
     title: "Linux, networking & security",
     text: "Continuing to learn through systems, virtual machines, security tools and hands-on experimentation.",
     roadmap: [
-      { text: "Understanding TCP/IP & DNS", status: "done", percent: 100 },
+      { text: "TCP/IP & DNS fundamentals", status: "done" },
       { text: "Small Python scripts", status: "progress" },
-      { text: "Information gathering & reconnaissance (Wireshark & Nmap)", status: "progress", percent: 50 },
+      { text: "Reconnaissance in a lab with Wireshark & Nmap", status: "progress" },
       { text: "Web application analysis (Burp Suite)", status: "progress" },
     ],
   },
@@ -94,15 +94,7 @@ export function NextStepsSection() {
                         <StatusMark status={item.status} />
                         <div className="roadmap-body">
                           <span className="roadmap-text">{item.text}</span>
-                          <span className="roadmap-status">
-                            {statusLabel[item.status]}
-                            {item.percent !== undefined && ` · ${item.percent}%`}
-                          </span>
-                          {item.percent !== undefined && (
-                            <span className="roadmap-bar" role="progressbar" aria-valuenow={item.percent} aria-valuemin={0} aria-valuemax={100} aria-label={item.text}>
-                              <span style={{ width: `${item.percent}%` }} />
-                            </span>
-                          )}
+                          <span className="roadmap-status">{statusLabel[item.status]}</span>
                         </div>
                       </li>
                     ))}

@@ -12,7 +12,7 @@ export function ProjectsSection() {
         />
 
         <div className="mt-12 space-y-5">
-          {site.projects.map((project, index) => (
+          {[...site.projects].sort((a, b) => b.started.localeCompare(a.started)).map((project, index) => (
             <article
               key={project.number}
               className="content-glass group grid overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.024] transition duration-300 hover:border-white/18 hover:bg-white/[0.035] lg:grid-cols-[.92fr_1.08fr]"
@@ -24,7 +24,7 @@ export function ProjectsSection() {
                 <div className={`project-shots ${project.layout === "tall" ? "is-tall" : "is-wide"} ${project.images.length > 1 ? "has-two" : ""}`}>
                   {project.images.map((image) => (
                     <div className="project-shot" key={image.src}>
-                      <img src={image.src} alt={image.alt} loading="lazy" />
+                      <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
                     </div>
                   ))}
                 </div>
