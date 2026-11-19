@@ -93,7 +93,7 @@ const projects: Project[] = [
     href: "https://github.com/lisboaphe/Portfolio-Phillip",
     layout: "wide",
     images: [
-      { src: "/projects/portfolio-home.webp", width: 1600, height: 1000, alt: "The portfolio home page with the pixel-art character and bento tiles" },
+      { src: "/projects/webportfolio-home.webp", width: 1200, height: 900, alt: "The portfolio home page with the project carousel, bento tiles, Thoughts panel and pixel-art character" },
     ],
   },
 ];
