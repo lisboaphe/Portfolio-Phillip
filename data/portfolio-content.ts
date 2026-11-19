@@ -38,8 +38,8 @@ const projects: Project[] = [
     href: "https://github.com/lisboaphe/Crew-Office",
     layout: "wide",
     images: [
-      { src: "/projects/crew-office-floor.webp", width: 1600, height: 804, alt: "Crew Office: the 2D pixel-art office floor with desks, a break area and the player at their desk" },
-      { src: "/projects/crew-office-characters.webp", width: 900, height: 876, alt: "Crew Office: the character picker with six pixel-art characters" },
+      { src: "/projects/crew-office-floor-live.webp", width: 1896, height: 921, alt: "Crew Office: the office floor with four AI agents working at their desks next to a break area" },
+      { src: "/projects/crew-office-agents.webp", width: 939, height: 459, alt: "Crew Office: close-up of four agent desks — Lead Dev, two Developers and an Art/Designer — showing Idle, Thinking and Asking AI states" },
     ],
   },
   {
