@@ -5,6 +5,7 @@ import { site } from "@/data/portfolio-content";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ProjectsSection } from "@/components/sections/ProjectsSection";
 import { ProjectCarousel } from "@/components/sections/ProjectCarousel";
+import { ThoughtsFeed } from "@/components/thoughts/ThoughtsFeed";
 import { TechStackSection } from "@/components/sections/TechStackSection";
 import { PixelIcon } from "@/components/ui/PixelIcon";
 import { NextStepsSection } from "@/components/sections/NextStepsSection";
@@ -161,7 +162,7 @@ export function PortfolioLayout() {
       <div className="bento-layout">
         <ProjectCarousel onOpen={(button,slug)=>{targetProject.current=slug;history.pushState(null,"","#projects");void transition("projects",button);}}/>
         <section className="focus-areas" aria-label="What I do">{focusAreas.map(area => <article className="focus-card" key={area.title}><PixelIcon name={`Icon_${area.icon}`}/><h2>{area.title}</h2><p>{area.text}</p></article>)}</section>
-        <div ref={photo} className="photo-tile"><img src="/photos/phillip-tall.webp" width={600} height={1800} alt="Phillip Lisboa smiling at a café table" className="portrait-image is-photo"/><div className="photo-caption"><span>PHILLIP</span><span>One pixel at a time.</span></div></div>
+        <div ref={photo} className="photo-tile thoughts-tile"><ThoughtsFeed/></div>
         <nav className="portal-nav" aria-label="Explore my portfolio">{tabs.filter(tab=>tab.id!=="projects").map((tab)=><button key={tab.id} disabled={busy} onClick={e=>{history.pushState(null,"",`#${tab.id}`);void transition(tab.id,e.currentTarget);}} className={`portal-button tile-${tab.id}`}>{tab.icon ? <PixelIcon name={tab.icon}/> : <span className="portal-glyph">{tab.glyph}</span>}<span className="portal-text"><strong>{tab.label}</strong><small>{tab.detail}</small></span></button>)}
         <div className={`portal-button tile-contact contact-card ${contactOpen ? "contact-open" : ""}`} onKeyDown={e=>{if(e.key==="Escape") {setContactOpen(false);e.currentTarget.querySelector("button")?.focus();}}}>
           <button className="contact-toggle" aria-expanded={contactOpen} aria-controls="contact-options" onClick={()=>setContactOpen(v=>!v)}><span className="contact-heading"><PixelIcon name="Icon_Contact"/><span className="portal-text"><strong>Contact</strong><small>Let’s connect</small></span></span></button>

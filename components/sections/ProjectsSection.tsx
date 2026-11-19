@@ -16,9 +16,9 @@ export function ProjectsSection() {
             <article
               key={project.slug}
               id={`project-${project.slug}`}
-              className="content-glass group grid overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.024] transition duration-300 hover:border-white/18 hover:bg-white/[0.035] lg:grid-cols-[.92fr_1.08fr]"
+              className="content-glass group grid overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.024] transition duration-300 hover:border-white/18 hover:bg-white/[0.035]"
             >
-              <div className={`relative min-h-[17rem] overflow-hidden border-b border-white/8 lg:min-h-[28rem] lg:border-b-0 ${index % 2 ? "lg:order-2 lg:border-l" : "lg:border-r"}`}>
+              <div className="project-media relative min-h-[17rem] overflow-hidden border-b border-white/8 sm:min-h-[22rem] lg:min-h-[26rem]">
                 <div className="project-grid absolute inset-0 opacity-45" />
                 <div className={`absolute inset-0 ${index % 3 === 0 ? "bg-[radial-gradient(circle_at_30%_35%,rgba(217,70,239,.22),transparent_38%),radial-gradient(circle_at_72%_67%,rgba(34,211,238,.20),transparent_38%)]" : index % 3 === 1 ? "bg-[radial-gradient(circle_at_60%_36%,rgba(59,130,246,.22),transparent_35%),radial-gradient(circle_at_30%_68%,rgba(139,92,246,.18),transparent_40%)]" : "bg-[radial-gradient(circle_at_40%_45%,rgba(34,197,94,.13),transparent_36%),radial-gradient(circle_at_75%_70%,rgba(34,211,238,.18),transparent_40%)]"}`} />
 
@@ -31,7 +31,7 @@ export function ProjectsSection() {
                 </div>
               </div>
 
-              <div className={`flex min-h-[22rem] flex-col justify-between p-6 sm:p-8 lg:p-10 ${index % 2 ? "lg:order-1" : ""}`}>
+              <div className="flex flex-col justify-between p-6 sm:p-8 lg:p-10">
                 <div>
                   <div className="flex items-center justify-between gap-4">
                     <span className="font-mono text-xs text-white/28">{String(index + 1).padStart(2, "0")}</span>
@@ -43,7 +43,7 @@ export function ProjectsSection() {
                   <h3 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-white sm:text-4xl">
                     {project.title}
                   </h3>
-                  <p className="mt-4 max-w-xl leading-7 text-white/48">{project.description}</p>
+                  <p className="mt-4 max-w-3xl leading-7 text-white/48">{project.description}</p>
                   {project.details && (
                     <dl className="project-details">
                       {project.details.map((point) => (
