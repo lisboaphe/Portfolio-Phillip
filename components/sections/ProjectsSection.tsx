@@ -1,4 +1,4 @@
-import { site } from "@/data/portfolio-content";
+import { projectsByDate } from "@/data/portfolio-content";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export function ProjectsSection() {
@@ -12,9 +12,10 @@ export function ProjectsSection() {
         />
 
         <div className="mt-12 space-y-5">
-          {[...site.projects].sort((a, b) => b.started.localeCompare(a.started)).map((project, index) => (
+          {projectsByDate.map((project, index) => (
             <article
-              key={project.number}
+              key={project.slug}
+              id={`project-${project.slug}`}
               className="content-glass group grid overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.024] transition duration-300 hover:border-white/18 hover:bg-white/[0.035] lg:grid-cols-[.92fr_1.08fr]"
             >
               <div className={`relative min-h-[17rem] overflow-hidden border-b border-white/8 lg:min-h-[28rem] lg:border-b-0 ${index % 2 ? "lg:order-2 lg:border-l" : "lg:border-r"}`}>
@@ -33,7 +34,7 @@ export function ProjectsSection() {
               <div className={`flex min-h-[22rem] flex-col justify-between p-6 sm:p-8 lg:p-10 ${index % 2 ? "lg:order-1" : ""}`}>
                 <div>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="font-mono text-xs text-white/28">{project.number}</span>
+                    <span className="font-mono text-xs text-white/28">{String(index + 1).padStart(2, "0")}</span>
                     <span className="rounded-full border border-white/9 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-white/32">
                       {project.status}
                     </span>
@@ -43,6 +44,13 @@ export function ProjectsSection() {
                     {project.title}
                   </h3>
                   <p className="mt-4 max-w-xl leading-7 text-white/48">{project.description}</p>
+                  {project.details && (
+                    <dl className="project-details">
+                      {project.details.map((point) => (
+                        <div key={point.label}><dt>{point.label}</dt><dd>{point.text}</dd></div>
+                      ))}
+                    </dl>
+                  )}
                   <div className="mt-6 flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <span

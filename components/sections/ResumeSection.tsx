@@ -50,7 +50,7 @@ export function ResumeSection() {
     <section className="resume-content">
       <p className="eyebrow">Résumé</p>
       <h2>Phillip Lisboa</h2>
-      <p className="resume-subtitle">Wirtschaftsinformatik Student · Developer · Cybersecurity Enthusiast</p>
+      <p className="resume-subtitle">Business Informatics student building web apps and Linux tools, with a growing focus on cybersecurity.</p>
       <div className="content-glass resume-summary">
         <h3>Development, systems & security</h3>
         <p>Building modern web experiences with React, Next.js and Tailwind CSS.</p>

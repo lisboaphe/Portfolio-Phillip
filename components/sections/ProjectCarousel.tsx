@@ -1,12 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { site } from "@/data/portfolio-content";
+import { projectsByDate as projects } from "@/data/portfolio-content";
 
-// Newest project first.
-const projects = [...site.projects].sort((a, b) => b.started.localeCompare(a.started));
-
-export function ProjectCarousel({ onOpen }: { onOpen: (button: HTMLButtonElement) => void }) {
+export function ProjectCarousel({ onOpen }: { onOpen: (button: HTMLButtonElement, slug: string) => void }) {
   const track = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   // Slide a click is heading to, so quick repeated clicks add up during the scroll.
@@ -54,7 +51,7 @@ export function ProjectCarousel({ onOpen }: { onOpen: (button: HTMLButtonElement
                   {project.tags.slice(0, 4).map((tag) => <li key={tag}>{tag}</li>)}
                 </ul>
                 <div className="carousel-actions">
-                  <button type="button" tabIndex={i === index ? 0 : -1} onClick={(e) => onOpen(e.currentTarget)}>View project</button>
+                  <button type="button" tabIndex={i === index ? 0 : -1} onClick={(e) => onOpen(e.currentTarget, project.slug)}>View project</button>
                   <a href={project.href} target="_blank" rel="noopener noreferrer" tabIndex={i === index ? 0 : -1}>GitHub ↗</a>
                 </div>
               </div>

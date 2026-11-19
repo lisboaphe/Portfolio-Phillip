@@ -57,6 +57,8 @@ export function PortfolioLayout() {
   const panel = useRef<HTMLDivElement>(null);
   const lastButton = useRef<HTMLButtonElement | null>(null);
   const opened = useRef<Page | null>(null);
+  // Project to scroll to when the projects panel opens from the carousel.
+  const targetProject = useRef<string | null>(null);
   const reveal = () => {
     const rect = anchor.current?.getBoundingClientRect();
     if (hero.current && rect) {
@@ -129,7 +131,13 @@ export function PortfolioLayout() {
     }
     transitionLock.current = false;
     setPage(target); opened.current = target; setBusy(false);
-    if (target) requestAnimationFrame(() => { panel.current?.scrollTo(0,0); panel.current?.focus(); });
+    if (target) requestAnimationFrame(() => {
+      const slug = targetProject.current;
+      targetProject.current = null;
+      const project = slug ? panel.current?.querySelector<HTMLElement>(`#project-${slug}`) : null;
+      if (project) project.scrollIntoView({ block: "start" }); else panel.current?.scrollTo(0,0);
+      panel.current?.focus({ preventScroll: true });
+    });
     else lastButton.current?.focus();
   };
   useEffect(() => {
@@ -151,7 +159,7 @@ export function PortfolioLayout() {
     <nav className={`rim-socials ${page ? "character-hidden" : ""}`} aria-label="Social links" inert={!revealed || !!page || busy}>{socialItems.map(item=><SocialItem key={item.label} item={item} compact/>)}<button type="button" className="contact-link" aria-label="Send me a message" title="Send me a message" onClick={e=>openMessage(e.currentTarget)}><img src="/pixel/Icon_Email.svg" width={24} height={24} alt=""/></button></nav>
     <div ref={hero} onAnimationEnd={event => { if (event.target === event.currentTarget && event.animationName === "water-reveal") { event.currentTarget.style.setProperty("animation", "none", "important"); event.currentTarget.style.setProperty("clip-path", "none", "important"); event.currentTarget.style.setProperty("filter", "none", "important"); } }} className={`hero-surface ${revealed ? "is-revealed" : ""}`} inert={!revealed || !!page || busy}>
       <div className="bento-layout">
-        <ProjectCarousel onOpen={button=>{history.pushState(null,"","#projects");void transition("projects",button);}}/>
+        <ProjectCarousel onOpen={(button,slug)=>{targetProject.current=slug;history.pushState(null,"","#projects");void transition("projects",button);}}/>
         <section className="focus-areas" aria-label="What I do">{focusAreas.map(area => <article className="focus-card" key={area.title}><PixelIcon name={`Icon_${area.icon}`}/><h2>{area.title}</h2><p>{area.text}</p></article>)}</section>
         <div ref={photo} className="photo-tile"><img src="/photos/phillip-tall.webp" width={600} height={1800} alt="Phillip Lisboa smiling at a café table" className="portrait-image is-photo"/><div className="photo-caption"><span>PHILLIP</span><span>One pixel at a time.</span></div></div>
         <nav className="portal-nav" aria-label="Explore my portfolio">{tabs.filter(tab=>tab.id!=="projects").map((tab)=><button key={tab.id} disabled={busy} onClick={e=>{history.pushState(null,"",`#${tab.id}`);void transition(tab.id,e.currentTarget);}} className={`portal-button tile-${tab.id}`}>{tab.icon ? <PixelIcon name={tab.icon}/> : <span className="portal-glyph">{tab.glyph}</span>}<span className="portal-text"><strong>{tab.label}</strong><small>{tab.detail}</small></span></button>)}
