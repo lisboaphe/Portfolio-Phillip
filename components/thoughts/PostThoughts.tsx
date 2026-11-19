@@ -4,6 +4,19 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { formatThoughtDate, type Thought } from "./format";
 
 const MAX = 600;
+
+// Opens LinkedIn's post box with the thought filled in. The text is also copied,
+// because LinkedIn's app on phones doesn't always take over the pre-filled text.
+const linkedInUrl = (text: string) => `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`;
+const copyText = (text: string) => { navigator.clipboard?.writeText(text).catch(() => undefined); };
+
+function ShareOnLinkedIn({ text, compact = false }: { text: string; compact?: boolean }) {
+  return (
+    <a className={compact ? "admin-linkedin is-compact" : "admin-linkedin"} href={linkedInUrl(text)} target="_blank" rel="noopener noreferrer" onClick={() => copyText(text)}>
+      {compact ? "LinkedIn ↗" : "Share on LinkedIn ↗"}
+    </a>
+  );
+}
 type State = "checking" | "locked" | "admin";
 
 export function PostThoughts() {
@@ -14,6 +27,7 @@ export function PostThoughts() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [lastPosted, setLastPosted] = useState("");
   const [busy, setBusy] = useState(false);
 
   const loadThoughts = useCallback(async () => {
@@ -34,7 +48,7 @@ export function PostThoughts() {
 
   const send = async (url: string, method: string, body?: unknown) => {
     const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
-    const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+    const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; thought?: Thought };
     if (res.status === 401 && url !== "/api/thoughts/session") setState("locked");
     return data;
   };
@@ -58,9 +72,11 @@ export function PostThoughts() {
     setBusy(true);
     setError("");
     setNotice("");
+    setLastPosted("");
     const data = await send("/api/thoughts", "POST", { text }).catch(() => ({ ok: false, error: "Something went wrong." }));
     setBusy(false);
     if (data.ok) {
+      setLastPosted(("thought" in data && data.thought?.text) || text.trim());
       setText("");
       setNotice("Posted. It’s live on your homepage.");
       void loadThoughts();
@@ -110,7 +126,17 @@ export function PostThoughts() {
                 <button type="submit" disabled={busy || !text.trim()}>{busy ? "Posting…" : "Post"}</button>
               </div>
             </form>
-            {notice && <p className="admin-notice" role="status">{notice}</p>}
+            {notice && (
+              <div className="admin-posted" role="status">
+                <p className="admin-notice">{notice}</p>
+                {lastPosted && (
+                  <>
+                    <ShareOnLinkedIn text={lastPosted} />
+                    <p className="admin-muted">Opens LinkedIn with your thought filled in. It’s copied too, so you can paste it if LinkedIn doesn’t.</p>
+                  </>
+                )}
+              </div>
+            )}
           </>
         )}
 
@@ -126,7 +152,10 @@ export function PostThoughts() {
                     <p>{t.text}</p>
                     <div className="admin-row">
                       <time className="admin-muted" dateTime={t.createdAt}>{formatThoughtDate(t.createdAt)}</time>
-                      <button type="button" className="admin-delete" onClick={() => remove(t.id)} disabled={busy}>Delete</button>
+                      <span className="admin-actions">
+                        <ShareOnLinkedIn text={t.text} compact />
+                        <button type="button" className="admin-delete" onClick={() => remove(t.id)} disabled={busy}>Delete</button>
+                      </span>
                     </div>
                   </li>
                 ))}
