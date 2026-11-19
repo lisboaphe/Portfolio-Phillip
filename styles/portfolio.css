@@ -485,3 +485,7 @@ button.contact-link{width:100%;text-align:left;cursor:pointer}
 .project-details dt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#bca3ff;margin:0 0 4px}
 .project-details dd{margin:0;color:#d1d7e7;font-size:14px;line-height:1.6}
 #work article{scroll-margin-top:24px}
+.project-disclaimer{margin:22px 0 0;max-width:36rem;padding:16px 18px;border-radius:16px;border:1px solid #ffd47840;background:#ffd4780d}
+.project-disclaimer-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#ffd478;margin:0 0 8px}
+.project-disclaimer p:not(.project-disclaimer-title){margin:0 0 10px;color:#d1d7e7;font-size:14px;line-height:1.6}
+.project-disclaimer p:last-child{margin-bottom:0}

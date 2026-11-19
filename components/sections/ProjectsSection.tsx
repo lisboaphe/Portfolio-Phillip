@@ -51,6 +51,12 @@ export function ProjectsSection() {
                       ))}
                     </dl>
                   )}
+                  {project.disclaimer && (
+                    <aside className="project-disclaimer" aria-label="Disclaimer">
+                      <p className="project-disclaimer-title">Disclaimer</p>
+                      {project.disclaimer.map((paragraph) => <p key={paragraph.slice(0, 24)}>{paragraph}</p>)}
+                    </aside>
+                  )}
                   <div className="mt-6 flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <span

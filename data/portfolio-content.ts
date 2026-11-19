@@ -10,6 +10,8 @@ export type Project = {
   summary: string;
   description: string;
   details?: ProjectDetails;
+  /** Optional disclaimer paragraphs shown under the details. */
+  disclaimer?: string[];
   tags: string[];
   status: string;
   href: string;
@@ -25,6 +27,11 @@ const projects: Project[] = [
       { label: "Technical challenge", text: "Getting Claude to work autonomously, making files shareable in multiplayer, stopping the AI from resending the whole chat with every request to cut token usage, and building an office environment that’s actually useful." },
       { label: "How it works", text: "A central Node.js host manages shared state in SQLite, while separate workers run agent jobs. HTTP handles actions and Server-Sent Events deliver live updates. Jobs use leases and retries to recover from interrupted workers, and backend events drive the activity in the office." },
       { label: "Current status", text: "A scripted demo lets you explore the workflow without an API key. Automated integration tests cover coordination, permissions and recovery. Hosting it on the internet requires a separately deployed connectivity service." },
+    ],
+    disclaimer: [
+      "This is my biggest project yet, and at times it felt like trying to jump over a huge fence, so I used Claude to help me code it. It was my first time building this way, and I wanted to get a taste of what people call the future of programming.",
+      "I found myself taking on responsibilities that felt like those of a lead or senior developer. Funnily enough, Claude would sometimes say something was “hard” and give me a long list of things to do before implementing a feature. But perhaps because of the knowledge I have, or my lack of experience, I often found a simpler way around the problem.",
+      "For example, for communication between chats, I used a database table on the host (messages in crew.sqlite).",
     ],
     title: "Crew Office",
     started: "2026-11-03",
